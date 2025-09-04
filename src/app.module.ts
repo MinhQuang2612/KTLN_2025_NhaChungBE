@@ -17,7 +17,9 @@ import { FavouritesModule } from './modules/favourites/favourites.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI') || 'mongodb://localhost:27017/nha_chung_db',
+        uri:
+          configService.get<string>('MONGO_URI') ||
+          'mongodb+srv://minhquangyi:uLzta6al7EHdfli4@cluster0.bnk2j.mongodb.net/nha_chung_db?retryWrites=true&w=majority',
       }),
       inject: [ConfigService],
     }),
