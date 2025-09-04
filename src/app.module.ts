@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,8 +12,15 @@ import { FavouritesModule } from './modules/favourites/favourites.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/nha_chung_db'),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI') || 'mongodb://localhost:27017/nha_chung_db',
+      }),
+      inject: [ConfigService],
+    }),
     UsersModule,
     RentPostsModule,
     RoommatePostsModule,
